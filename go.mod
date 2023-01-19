@@ -1,9 +1,8 @@
-module idpassgen
+module pgen
 
 go 1.19
 
 require (
-	github.com/oklog/run v1.1.0
 	github.com/spf13/cobra v1.6.1
 	gonum.org/v1/gonum v0.12.0
 )

@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"github.com/spf13/cobra"
-	"idpassgen/pkg/passphrase"
-	"idpassgen/pkg/password"
+	"pgen/pkg/passphrase"
+	"pgen/pkg/password"
 )
 
 var includeUpperCase, includeLowerCase, includeNumbers, includeSpecialCharacters bool

@@ -10,11 +10,8 @@ import (
 var rootCmd = &cobra.Command{
 	Use:     "pgen",
 	Short:   "password & passphrase generator",
-	Long:    "notyet",
-	Version: version.Version,
-	Run: func(cmd *cobra.Command, args []string) {
-
-	},
+	Long:    "password & passphrase generator",
+	Version: version.VERSION,
 }
 
 func Execute() {

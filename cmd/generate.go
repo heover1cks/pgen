@@ -1,9 +1,10 @@
 package cmd
 
 import (
-	"github.com/spf13/cobra"
 	"pgen/pkg/passphrase"
 	"pgen/pkg/password"
+
+	"github.com/spf13/cobra"
 )
 
 var includeUpperCase, includeLowerCase, includeNumbers, includeSpecialCharacters bool
@@ -25,7 +26,6 @@ func init() {
 	passphraseGenCommand.Flags().BoolVarP(&includeNumbers, "num", "n", false, "whether include numbers or not")
 	passphraseGenCommand.Flags().StringVarP(&separator, "separator", "s", "-", "passphrase separator")
 	passphraseGenCommand.Flags().IntVarP(&wordsCount, "word.count", "c", 3, "words count")
-
 }
 
 var passwordGenCommand = &cobra.Command{
@@ -44,7 +44,7 @@ var passphraseGenCommand = &cobra.Command{
 	Run:     passphraseRunFunc,
 }
 
-func passphraseRunFunc(cmd *cobra.Command, args []string) {
+func passphraseRunFunc(_ *cobra.Command, _ []string) {
 	opts := passphrase.NewOptions()
 	opts.WithWordsCount(wordsCount)
 	opts.WithSeparator(separator)
@@ -52,7 +52,7 @@ func passphraseRunFunc(cmd *cobra.Command, args []string) {
 	println(opts.GeneratePassPhrase())
 }
 
-func passwordRunFunc(cmd *cobra.Command, args []string) {
+func passwordRunFunc(_ *cobra.Command, _ []string) {
 	opts := password.NewOptions()
 	opts.WithPassLength(passwordLength)
 	opts.WithUpperCase(includeUpperCase)

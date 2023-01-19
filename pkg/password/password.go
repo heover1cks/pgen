@@ -2,7 +2,6 @@ package password
 
 import (
 	cryptoRand "crypto/rand"
-	"gonum.org/v1/gonum/stat/combin"
 	"log"
 	"math"
 	"math/big"
@@ -10,6 +9,8 @@ import (
 	"pgen/pkg/utils"
 
 	"time"
+
+	"gonum.org/v1/gonum/stat/combin"
 )
 
 const (
@@ -85,23 +86,22 @@ func (p *Password) Get() string {
 	return string(p.generated)
 }
 
-// TODO: need to check what is better if Password contains seed value or generate seed everytime insertAtRandomPosition is called
+// TODO: need to check what is better if Password contains seed value or generate seed everytime insertAtRandomPosition is called.
 func (p *Password) insertAtRandomPosition(target byte) {
 	pos := rand.Int() % p.length
 	if p.inserted[pos] {
 		p.insertAtRandomPosition(target)
 	} else {
-		front := append(p.generated[:pos], target)
 		if pos == p.length-1 {
-			p.generated = front
+			p.generated = append(p.generated[:pos], target)
 		} else {
 			back := p.generated[pos+1:]
-			p.generated = append(front, back...)
+			p.generated = append(append(p.generated[:pos], target), back...)
 		}
 	}
 }
 
-func (p *Options) GeneratePasswordV3() (Pass string) {
+func (p *Options) GeneratePasswordV3() string {
 	seed, _ := cryptoRand.Int(cryptoRand.Reader, big.NewInt(math.MaxInt64))
 	rand.Seed(seed.Int64())
 	if !p.includeUpperCase && !p.includeLowerCase && !p.includeNumbers && !p.includeSpecialCharacters {
@@ -125,25 +125,25 @@ func (p *Options) GeneratePasswordV3() (Pass string) {
 	var pw *Password
 
 	if p.includeNumbers {
-		// Cap number count to max
+		// Cap number count to max.
 		v, countForEach = utils.Shift(countForEach)
 		if v > p.maxNumbers && p.maxNumbers >= 0 {
 			countForEach[0] += v - p.maxNumbers
 			v = p.maxNumbers
 		}
-		// append number bytes
+		// append number bytes.
 		others = utils.RandStringBytes(v, []byte(numberBytes))
 	}
 
 	if p.includeSpecialCharacters {
 		v, countForEach = utils.Shift(countForEach)
 
-		// Cap special character count to max
+		// Cap special character count to max.
 		if v > p.maxSpecialCharacters && p.maxSpecialCharacters >= 0 {
 			countForEach[0] += v - p.maxSpecialCharacters
 			v = p.maxSpecialCharacters
 		}
-		// append special character bytes
+		// append special character bytes.
 		others = append(others, utils.RandStringBytes(v, []byte(specialCharacterBytes))...)
 	}
 	if p.includeUpperCase || p.includeLowerCase {
@@ -151,13 +151,10 @@ func (p *Options) GeneratePasswordV3() (Pass string) {
 		switch {
 		case p.includeUpperCase && p.includeLowerCase:
 			alphabetByte = []byte(alphabetUpperCaseBytes + alphabetLowerCaseBytes)
-			break
 		case p.includeUpperCase && !p.includeLowerCase:
 			alphabetByte = []byte(alphabetUpperCaseBytes)
-			break
 		case !p.includeUpperCase && p.includeLowerCase:
 			alphabetByte = []byte(alphabetLowerCaseBytes)
-			break
 		default:
 			panic("")
 		}
@@ -173,7 +170,7 @@ func (p *Options) GeneratePasswordV3() (Pass string) {
 	return pw.Get()
 }
 
-func (p *Options) GeneratePassword() (Pass string) {
+func (p *Options) GeneratePassword() string {
 	rand.Seed(time.Now().UnixNano())
 	if !p.includeUpperCase && !p.includeLowerCase && !p.includeNumbers && !p.includeSpecialCharacters {
 		log.Fatalf("all options are disabled")
@@ -208,7 +205,8 @@ func (p *Options) GeneratePassword() (Pass string) {
 		}
 		ret = append(ret, utils.RandStringBytes(v, []byte(specialCharacterBytes))...)
 	}
-	if p.includeUpperCase && p.includeLowerCase {
+	switch {
+	case p.includeUpperCase && p.includeLowerCase:
 		var tot int
 		for _, v := range countForEach {
 			tot += v
@@ -216,11 +214,10 @@ func (p *Options) GeneratePassword() (Pass string) {
 		mid := rand.Int() % tot
 		ret = append(ret, utils.RandStringBytes(mid, []byte(alphabetUpperCaseBytes))...)
 		ret = append(ret, utils.RandStringBytes(tot-mid+1, []byte(alphabetLowerCaseBytes))...)
-
-	} else if p.includeUpperCase {
+	case p.includeUpperCase:
 		v, countForEach = utils.Shift(countForEach)
 		ret = append(ret, utils.RandStringBytes(v, []byte(alphabetUpperCaseBytes))...)
-	} else if p.includeLowerCase {
+	case p.includeLowerCase:
 		v, countForEach = utils.Shift(countForEach)
 		ret = append(ret, utils.RandStringBytes(v, []byte(alphabetLowerCaseBytes))...)
 	}

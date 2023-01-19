@@ -17,7 +17,7 @@ func TestGeneratePass(t *testing.T) {
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		// GeneratePassword
+		// GeneratePassword.
 		start1 := time.Now()
 		println(opts.GeneratePassword())
 		println("function1) elapsed: ", time.Since(start1).String())
@@ -27,7 +27,7 @@ func TestGeneratePass(t *testing.T) {
 	wg.Add(1)
 	go func() {
 		defer wg.Done()
-		// GeneratePasswordV3
+		// GeneratePasswordV3.
 		start3 := time.Now()
 		println(opts.GeneratePasswordV3())
 		println("function3) elapsed: ", time.Since(start3).String())

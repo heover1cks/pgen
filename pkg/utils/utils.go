@@ -2,16 +2,17 @@ package utils
 
 import (
 	cryptoRand "crypto/rand"
-	"gonum.org/v1/gonum/stat/combin"
 	"math"
 	"math/big"
 	"math/rand"
+
+	"gonum.org/v1/gonum/stat/combin"
 )
 
 func BoolCounter(inputs ...bool) (ret int) {
 	for _, input := range inputs {
-		if input == true {
-			ret += 1
+		if input {
+			ret++
 		}
 	}
 	return

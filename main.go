@@ -1,6 +1,6 @@
 package main
 
-import "idpassgen/cmd"
+import "pgen/cmd"
 
 func main() {
 	cmd.Execute()

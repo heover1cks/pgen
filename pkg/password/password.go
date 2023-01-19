@@ -3,11 +3,11 @@ package password
 import (
 	cryptoRand "crypto/rand"
 	"gonum.org/v1/gonum/stat/combin"
-	"idpassgen/pkg/utils"
 	"log"
 	"math"
 	"math/big"
 	"math/rand"
+	"pgen/pkg/utils"
 
 	"time"
 )

@@ -2,9 +2,9 @@ package passphrase
 
 import (
 	"fmt"
-	"idpassgen/pkg/words"
 	"math"
 	"math/rand"
+	"pgen/pkg/words"
 	"strings"
 	"time"
 )

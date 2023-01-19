@@ -3,8 +3,8 @@ package cmd
 import (
 	"fmt"
 	"github.com/spf13/cobra"
-	"idpassgen/pkg/version"
 	"os"
+	"pgen/pkg/version"
 )
 
 var rootCmd = &cobra.Command{

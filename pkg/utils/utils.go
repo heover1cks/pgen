@@ -1,6 +1,12 @@
 package utils
 
-import "math/rand"
+import (
+	cryptoRand "crypto/rand"
+	"gonum.org/v1/gonum/stat/combin"
+	"math"
+	"math/big"
+	"math/rand"
+)
 
 func BoolCounter(inputs ...bool) (ret int) {
 	for _, input := range inputs {
@@ -32,4 +38,29 @@ func PrintArrayValues[T any](vals []T) {
 		print(v, " ")
 	}
 	println()
+}
+
+func RandCombination(n, k int) (ret []int) {
+	seed, _ := cryptoRand.Int(cryptoRand.Reader, big.NewInt(math.MaxInt64))
+	rand.Seed(seed.Int64())
+	cur, prev := 0, 0
+	for x := 0; x < k; x++ {
+		cur = rand.Int()%(n-prev-k+x+1) + 1
+		println(n-prev-k+x, cur, prev)
+		ret = append(ret, cur+prev)
+		prev = cur + prev
+	}
+	return
+}
+
+func RandCombinationWithCombin(n, k int) []int {
+	seed, _ := cryptoRand.Int(cryptoRand.Reader, big.NewInt(math.MaxInt64))
+	rand.Seed(seed.Int64())
+	end := combin.Binomial(n, k)
+	idx := rand.Int() % end
+	cg := combin.NewCombinationGenerator(n, k)
+	for i := 0; i < idx; i++ {
+		cg.Next()
+	}
+	return cg.Combination(nil)
 }

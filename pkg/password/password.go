@@ -108,7 +108,10 @@ func (p *Options) GeneratePasswordV3() string {
 		log.Fatalf("all options are disabled")
 	}
 	s := p.SeparationCounter()
-	c := combin.Combinations(p.passLength, s-1)
+	if p.passLength < s {
+		log.Fatalf("password should be longer than %v with given options", s)
+	}
+	c := combin.Combinations(p.passLength, s)
 
 	var countForEach []int
 	prev := 0
@@ -117,7 +120,7 @@ func (p *Options) GeneratePasswordV3() string {
 		countForEach = append(countForEach, v-prev+1)
 		prev = v + 1
 	}
-	countForEach = append(countForEach, p.passLength-prev+1)
+	countForEach = append(countForEach, p.passLength-prev)
 
 	var others []byte
 	var alphabets int
@@ -176,7 +179,7 @@ func (p *Options) GeneratePassword() string {
 		log.Fatalf("all options are disabled")
 	}
 	s := p.SeparationCounter()
-	c := combin.Combinations(p.passLength, s-1)
+	c := combin.Combinations(p.passLength, s)
 
 	var countForEach []int
 	prev := 0
